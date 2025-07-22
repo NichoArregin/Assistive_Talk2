@@ -1,69 +1,108 @@
 import React, { useState, useEffect } from "react";
-import { HashRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Header from "./components/Header";
 import HomePage from "./pages/HomePage";
 import AddClientPage from "./pages/AddClientPage";
 import ClientProfilePage from "./pages/ClientProfilePage";
 import CalendarPage from "./pages/CalendarPage";
-import { loadClients, saveClients } from "./data/clients";
 
 function App() {
   const [clients, setClients] = useState([]);
 
+  // Load clients from localStorage
   useEffect(() => {
-    const storedClients = loadClients();
-    if (storedClients) {
-      setClients(storedClients);
+    const saved = localStorage.getItem("assistive-talk-clients");
+    if (saved) {
+      setClients(JSON.parse(saved));
     }
   }, []);
 
+  // Save clients to localStorage
   useEffect(() => {
-    saveClients(clients);
+    localStorage.setItem("assistive-talk-clients", JSON.stringify(clients));
   }, [clients]);
 
   const handleAddClient = (client) => {
     setClients([...clients, client]);
   };
 
-  const handleDeleteClient = (clientId) => {
-    setClients(clients.filter((c) => c.id !== clientId));
-  };
-
-  const handleUpdateClient = (updatedClient) => {
-    setClients(
-      clients.map((c) => (c.id === updatedClient.id ? updatedClient : c))
+  const handleAddMood = (clientId, mood) => {
+    setClients((prev) =>
+      prev.map((client) =>
+        client.id === clientId
+          ? {
+              ...client,
+              moods: [{ mood, date: new Date().toISOString() }, ...(client.moods || [])],
+            }
+          : client
+      )
     );
   };
 
-  const todaysAlerts = clients.flatMap((client) =>
-    client.options?.filter((opt) => {
-      const today = new Date().toISOString().split("T")[0];
-      return opt.date === today;
-    }).map((opt) => ({ ...opt, clientName: client.name }))
-  );
+  const handleAddDiary = (clientId, entry) => {
+    setClients((prev) =>
+      prev.map((client) =>
+        client.id === clientId
+          ? {
+              ...client,
+              diary: [
+                { text: entry, date: new Date().toISOString() },
+                ...(client.diary || []),
+              ],
+            }
+          : client
+      )
+    );
+  };
+
+  const handleAddOption = (clientId, type, option) => {
+    setClients((prev) =>
+      prev.map((client) =>
+        client.id === clientId
+          ? {
+              ...client,
+              [type]: [...(client[type] || []), option],
+            }
+          : client
+      )
+    );
+  };
+
+  const todayISO = new Date().toISOString().split("T")[0];
+  const todaysReminders = [];
+
+  clients.forEach((client) => {
+    ["activities", "meals"].forEach((type) => {
+      (client[type] || []).forEach((item) => {
+        const itemDate = item.date?.split("T")[0];
+        if (itemDate === todayISO) {
+          todaysReminders.push({
+            label: `${client.name} - ${item.label}`,
+            time: item.time || "Time not set",
+          });
+        }
+      });
+    });
+  });
 
   return (
     <Router>
-      <Header todaysAlerts={todaysAlerts} />
+      <Header />
       <Routes>
-        <Route path="/" element={<HomePage clients={clients} />} />
+        <Route path="/" element={<HomePage clients={clients} reminders={todaysReminders} />} />
+        <Route path="/add" element={<AddClientPage onAddClient={handleAddClient} />} />
         <Route
-          path="/add"
-          element={<AddClientPage onAddClient={handleAddClient} />}
-        />
-        <Route
-          path="/client/:id"
+          path="/profile/:id"
           element={
             <ClientProfilePage
               clients={clients}
-              onUpdateClient={handleUpdateClient}
+              onAddMood={handleAddMood}
+              onAddDiary={handleAddDiary}
+              onAddOption={handleAddOption}
             />
           }
         />
-        <Route
-          path="/calendar/:id"
-          element={<CalendarPage clients={clients} />}
-        />
+        <Route path="/calendar" element={<CalendarPage />} />
       </Routes>
     </Router>
   );

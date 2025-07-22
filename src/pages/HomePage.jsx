@@ -1,16 +1,13 @@
-// src/pages/HomePage.jsx
 import React from "react";
 import ClientCard from "../components/ClientCard";
-import { Link } from "react-router-dom";
+import ReminderList from "../components/ReminderList";
 import "../styles/HomePage.css";
 
-function HomePage({ clients }) {
+const HomePage = ({ clients, reminders }) => {
   return (
     <div className="homepage-container">
-      <div className="header-row">
-        <h1>Assistive Talk</h1>
-        <Link to="/add" className="add-btn">+ Add Client</Link>
-      </div>
+      <ReminderList reminders={reminders} />
+      <h2>Client List</h2>
       <div className="client-grid">
         {clients.map((client) => (
           <ClientCard key={client.id} client={client} />
@@ -18,6 +15,6 @@ function HomePage({ clients }) {
       </div>
     </div>
   );
-}
+};
 
 export default HomePage;
