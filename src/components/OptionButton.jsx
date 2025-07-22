@@ -1,23 +1,25 @@
-// src/components/OptionButton.jsx
 import React from "react";
 import useTextToSpeech from "../hooks/useTextToSpeech";
+import "../styles/OptionButton.css"; // Assuming you have a CSS file for styling
 
-function OptionButton({ option }) {
-  const speak = useTextToSpeech();
+const OptionButton = ({ label, icon, date, time }) => {
+  const { speak } = useTextToSpeech();
 
   const handleClick = () => {
-    speak(option.label);
+    speak(label);
   };
 
   return (
-    <div className="option-button" onClick={handleClick}>
-      <div className="icon">{option.icon}</div>
-      <div className="label">{option.label}</div>
-      <div className="datetime">
-        {option.date} {option.time}
-      </div>
+    <div className="option-button" onClick={handleClick} tabIndex={0}>
+      <div className="icon">{icon}</div>
+      <div className="label">{label}</div>
+      {date && time && (
+        <div className="timestamp">
+          {new Date(date).toLocaleDateString()} - {time}
+        </div>
+      )}
     </div>
   );
-}
+};
 
 export default OptionButton;
