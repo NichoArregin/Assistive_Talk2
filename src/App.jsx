@@ -105,6 +105,7 @@ function App() {
         {/* Main content area */}
         <main>
           <Routes>
+            <Route path="/calendar/:id" element={<CalendarPage clients={clients} />} />
             <Route path="/" element={<HomePage clients={clients} />} />
             <Route path="/client/:clientId" element={
               <ClientProfilePage 
