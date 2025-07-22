@@ -1,69 +1,80 @@
-.client-container {
+.client-profile {
   padding: 2rem;
   color: white;
 }
 
-.client-header {
+.profile-header {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
 }
 
-.client-profile-image {
+.profile-picture {
   width: 80px;
   height: 80px;
   border-radius: 9999px;
-  border: 3px solid purple;
+  border: 3px solid #9333ea;
   object-fit: cover;
 }
 
-.client-buttons {
+.profile-buttons {
   display: flex;
   gap: 1rem;
+  flex-wrap: wrap;
   margin-left: auto;
 }
 
-.btn {
-  font-size: 0.9rem;
-  font-weight: 600;
+.profile-buttons .btn {
   padding: 0.5rem 1rem;
-  border-radius: 10px;
-  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  color: white;
   cursor: pointer;
+  border: none;
+  font-size: 0.9rem;
+  transition: 0.2s ease;
 }
 
 .calendar-btn {
-  background-color: #a855f7;
-  color: white;
+  background-color: #9333ea;
+  font-size: 1rem;
+  padding: 0.6rem 1.2rem;
 }
 
-.edit-btn {
-  background-color: #3b82f6;
-  color: white;
+.calendar-btn:hover {
+  background-color: #7e22ce;
+}
+
+.home-btn {
+  background-color: #2563eb;
+}
+
+.home-btn:hover {
+  background-color: #1d4ed8;
 }
 
 .delete-btn {
-  background-color: #ef4444;
+  background-color: #dc2626;
+}
+
+.delete-btn:hover {
+  background-color: #b91c1c;
+}
+
+/* Centered message styling for "Client not found" */
+.text-center {
+  text-align: center;
+  margin-top: 2rem;
+}
+.text-center h2 {
+  font-size: 1.25rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
   color: white;
 }
-
-.mood-section {
-  display: flex;
-  gap: 2rem;
-  margin-bottom: 2rem;
-}
-
-.mood-log {
-  flex: 1;
-  background-color: #1e293b;
-  padding: 1rem;
-  border-radius: 10px;
-}
-
-.mood-buttons {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  margin-top: 1rem;
+.text-center a {
+  color: #60a5fa;
+  text-decoration: underline;
 }
