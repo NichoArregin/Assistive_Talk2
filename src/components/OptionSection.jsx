@@ -1,46 +1,34 @@
 import React, { useState } from "react";
 import OptionButton from "./OptionButton";
 import AddOptionModal from "./AddOptionModal";
+import { DEFAULT_ACTIVITIES, DEFAULT_MEALS } from "../data/constants";
+import "../styles/OptionSection.css";
 
-function OptionSection({ client, type, onAddOption }) {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [search, setSearch] = useState("");
 
-  const options = client.options[type] || [];
+function OptionSection({ title, options, onAddOption }) {
+  const [showModal, setShowModal] = useState(false);
 
-  const filteredOptions = options.filter(option =>
-    option.label.toLowerCase().includes(search.toLowerCase())
-  );
-
-  const handleAdd = (option) => {
-    onAddOption(client.id, type, option);
-    setIsModalOpen(false);
-  };
+  const defaultOptions = title === "Activities" ? DEFAULT_ACTIVITIES : DEFAULT_MEALS;
 
   return (
     <div className="option-section">
-      <div className="option-section-header">
-        <h2>{type === "activities" ? "Activities" : "Meals"}</h2>
-        <input
-          type="text"
-          placeholder="Search..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
-        <button onClick={() => setIsModalOpen(true)}>+ Add</button>
+      <div className="section-header">
+        <h3>{title}</h3>
+        <button onClick={() => setShowModal(true)}>Add</button>
       </div>
 
       <div className="option-grid">
-        {filteredOptions.map((option, index) => (
-          <OptionButton key={index} option={option} />
+        {options.map((option, idx) => (
+          <OptionButton key={idx} label={option.label} icon={option.icon} />
         ))}
       </div>
 
-      {isModalOpen && (
+      {showModal && (
         <AddOptionModal
-          type={type}
-          onClose={() => setIsModalOpen(false)}
-          onSave={handleAdd}
+          type={title.toLowerCase()}
+          onClose={() => setShowModal(false)}
+          onAddOption={onAddOption}
+          defaultOptions={defaultOptions}
         />
       )}
     </div>
