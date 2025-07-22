@@ -1,35 +1,27 @@
-import React, { useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import "../styles/Header.css";
 
 function Header({ todaysAlerts }) {
-  const [showDropdown, setShowDropdown] = useState(false);
+  const alerts = Array.isArray(todaysAlerts) ? todaysAlerts : [];
 
   return (
     <header className="header">
-      <div className="title">
-        <Link to="/">Assistive Talk</Link>
+      <div className="header-left">
+        <h1 className="logo">Assistive Talk</h1>
+        <nav className="nav">
+          <Link to="/">Home</Link>
+          <Link to="/calendar">Calendar</Link>
+          <Link to="/add-client">Add Client</Link>
+        </nav>
       </div>
-      <nav className="nav">
-        <Link to="/">Home</Link>
-        <Link to="/add">Add Client</Link>
-        <div className="alerts" onClick={() => setShowDropdown(!showDropdown)}>
-          🔔 {todaysAlerts.length}
-          {showDropdown && (
-            <div className="alerts-dropdown">
-              {todaysAlerts.length === 0 ? (
-                <p>No events today</p>
-              ) : (
-                todaysAlerts.map((alert, i) => (
-                  <div key={i}>
-                    <strong>{alert.clientName}</strong>: {alert.label} at {alert.time}
-                  </div>
-                ))
-              )}
-            </div>
-          )}
-        </div>
-      </nav>
+      <div className="header-right">
+        {alerts.length > 0 && (
+          <div className="reminder-alert">
+            🔔 {alerts.length} Reminder{alerts.length > 1 ? "s" : ""} for today
+          </div>
+        )}
+      </div>
     </header>
   );
 }

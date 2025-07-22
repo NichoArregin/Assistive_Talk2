@@ -87,11 +87,11 @@ function App() {
 
   return (
     <Router>
-      <Header />
+      <Header todaysAlerts={todaysReminders} />
       <Routes>
-        <Route path="/calendar/:id" element={<CalendarPage clients={clients} />} />
         <Route path="/" element={<HomePage clients={clients} reminders={todaysReminders} />} />
-        <Route path="/add" element={<AddClientPage onAddClient={handleAddClient} />} />
+        <Route path="/calendar/:id" element={<CalendarPage clients={clients} />} />
+        <Route path="/add-client" element={<AddClientPage onAddClient={handleAddClient} />} />
         <Route
           path="/profile/:id"
           element={
