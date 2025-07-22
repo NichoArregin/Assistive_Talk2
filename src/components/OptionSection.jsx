@@ -1,26 +1,48 @@
-import React from "react";
+import React, { useState } from "react";
+import OptionButton from "./OptionButton";
+import AddOptionModal from "./AddOptionModal";
 
-function OptionSection({ type, client, onAddOption, onDeleteOption }) {
-  const options = client.options.filter((o) => o.type === type);
+function OptionSection({ client, type, onAddOption }) {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [search, setSearch] = useState("");
+
+  const options = client.options[type] || [];
+
+  const filteredOptions = options.filter(option =>
+    option.label.toLowerCase().includes(search.toLowerCase())
+  );
+
+  const handleAdd = (option) => {
+    onAddOption(client.id, type, option);
+    setIsModalOpen(false);
+  };
 
   return (
-    <div className="bg-zinc-800 p-4 rounded-lg text-white">
-      <h2 className="text-xl font-semibold mb-2">
-        {type === "activity" ? "Activities" : "Meals"}
-      </h2>
-      <ul>
-        {options.map((option, index) => (
-          <li key={index}>
-            {option.label} - {option.date} {option.time}
-            <button
-              onClick={() => onDeleteOption(client.id, option)}
-              className="text-red-400 ml-2"
-            >
-              Delete
-            </button>
-          </li>
+    <div className="option-section">
+      <div className="option-section-header">
+        <h2>{type === "activities" ? "Activities" : "Meals"}</h2>
+        <input
+          type="text"
+          placeholder="Search..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+        <button onClick={() => setIsModalOpen(true)}>+ Add</button>
+      </div>
+
+      <div className="option-grid">
+        {filteredOptions.map((option, index) => (
+          <OptionButton key={index} option={option} />
         ))}
-      </ul>
+      </div>
+
+      {isModalOpen && (
+        <AddOptionModal
+          type={type}
+          onClose={() => setIsModalOpen(false)}
+          onSave={handleAdd}
+        />
+      )}
     </div>
   );
 }

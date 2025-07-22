@@ -1,50 +1,56 @@
-import React from 'react';
-import { useParams } from 'react-router-dom';
-import MoodTracker from '../components/MoodTracker';
-import Diary from '../components/Diary';
-import OptionSection from '../components/OptionSection';
+import React from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import MoodTracker from "../components/MoodTracker";
+import Diary from "../components/Diary";
+import OptionSection from "../components/OptionSection";
+import Icon from "../components/Icon";
 
 function ClientProfilePage({
   clients,
+  onDeleteClient,
   onAddMood,
   onAddDiaryEntry,
-  onAddOption,
-  onDeleteOption
+  setClients,
 }) {
   const { id } = useParams();
+  const navigate = useNavigate();
   const client = clients.find((c) => c.id === id);
 
-  if (!client) {
-    return <p className="text-white p-4">Client not found</p>;
-  }
+  if (!client) return <p>Client not found.</p>;
 
   return (
-    <div className="p-4">
-      <h1 className="text-3xl font-bold text-white mb-4">{client.name}</h1>
-      <div className="grid md:grid-cols-2 gap-4">
-        <MoodTracker
-          moods={client.moods}
-          onAddMood={(mood) => onAddMood(client.id, mood)}
-        />
-        <Diary
-          entries={client.diaryEntries}
-          onAddDiaryEntry={(entry) => onAddDiaryEntry(client.id, entry)}
-        />
+    <div className="page">
+      <div className="client-header">
+        <img src={client.image} alt={client.name} className="client-avatar" />
+        <h1>{client.name}</h1>
+        <button
+          className="delete-button"
+          onClick={() => {
+            if (window.confirm("Are you sure you want to delete this client?")) {
+              onDeleteClient(client.id);
+              navigate("/");
+            }
+          }}
+        >
+          <Icon name="trash" />
+        </button>
       </div>
-      <div className="grid md:grid-cols-2 gap-4 mt-6">
-        <OptionSection
-          type="activity"
-          client={client}
-          onAddOption={onAddOption}
-          onDeleteOption={onDeleteOption}
-        />
-        <OptionSection
-          type="meal"
-          client={client}
-          onAddOption={onAddOption}
-          onDeleteOption={onDeleteOption}
-        />
-      </div>
+
+      <MoodTracker client={client} onAddMood={onAddMood} />
+      <Diary client={client} onAddDiaryEntry={onAddDiaryEntry} />
+
+      <OptionSection
+        type="activities"
+        client={client}
+        clients={clients}
+        setClients={setClients}
+      />
+      <OptionSection
+        type="meals"
+        client={client}
+        clients={clients}
+        setClients={setClients}
+      />
     </div>
   );
 }
