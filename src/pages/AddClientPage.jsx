@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import Icon from '../components/Icon';
+import "../styles/AddClientPage.css";  /* Import the new CSS */
 
 const AddClientPage = ({ onAddClient }) => {
   const [name, setName] = useState('');
@@ -19,7 +20,7 @@ const AddClientPage = ({ onAddClient }) => {
       const reader = new FileReader();
       reader.onloadend = () => {
         setImagePreview(reader.result);
-        setError('');
+        setError('');  // Clear previous errors on successful load
       };
       reader.readAsDataURL(file);
     }
@@ -39,61 +40,73 @@ const AddClientPage = ({ onAddClient }) => {
       setError('Please upload an image for the client.');
       return;
     }
-    // Create new client and navigate home
+    // Add the new client and navigate home
     onAddClient(name.trim(), imagePreview);
     navigate('/');
   };
 
   return (
-    <div className="max-w-lg mx-auto p-4">
-      <h2 className="text-2xl font-bold mb-4">Add a New Client Profile</h2>
-      <form onSubmit={handleSubmit}>
+    <div className="add-client-container">
+      <h2>Add a New Client Profile</h2>
+      <form onSubmit={handleSubmit} noValidate>  {/* disable default HTML validation */}
         {/* Client Name field */}
-        <div className="mb-3">
-          <label className="block text-sm font-medium mb-1">Client Name</label>
-          <input 
+        <div className="form-field">
+          <label htmlFor="clientName">Client Name</label>
+          <input
+            id="clientName"
             type="text"
             value={name}
-            onChange={(e) => { setName(e.target.value); if (error) setError(''); }}
+            onChange={(e) => {
+              setName(e.target.value);
+              if (error) setError('');  // clear error when typing
+            }}
             placeholder="Enter the client's name"
             className="form-input"
-            required
+            required 
             aria-describedby={error ? 'form-error' : undefined}
           />
         </div>
+
         {/* Client Image field */}
-        <div className="mb-3">
-          <label className="block text-sm font-medium mb-1">Client Image</label>
-          <div className="flex items-center gap-4">
-            {imagePreview ? (
-              <img 
-                src={imagePreview} 
-                alt="Client preview" 
-                className="w-16 h-16 rounded-full object-cover" 
-              />
-            ) : (
-              <Icon name="user" className="w-16 h-16 rounded-full bg-slate-600 flex-shrink-0" />
-            )}
-            <button type="button" onClick={triggerFileSelect} className="btn btn-blue">
+        <div className="form-field image-field">
+          <label>Client Image</label>
+          <div className="image-upload-row">
+            <div className="avatar-preview">
+              {imagePreview ? (
+                <img src={imagePreview} alt="Client preview" className="avatar-image" />
+              ) : (
+                <Icon name="user" className="avatar-icon" />
+              )}
+            </div>
+            <button 
+              type="button" 
+              onClick={triggerFileSelect} 
+              className="btn btn-gray"
+            >
               Upload Image
             </button>
           </div>
           <input 
-            type="file"
-            ref={fileInputRef}
-            onChange={handleImageChange}
-            className="hidden"
-            accept="image/*"
+            type="file" 
+            ref={fileInputRef} 
+            onChange={handleImageChange} 
+            className="hidden-file-input" 
+            accept="image/*" 
+            aria-label="Upload client image" 
           />
         </div>
-        {/* Error message */}
+
+        {/* Error message display */}
         {error && (
-          <p id="form-error" className="text-red-500 mb-3">{error}</p>
+          <p id="form-error" className="form-error">
+            {error}
+          </p>
         )}
+
         {/* Action buttons */}
-        <div className="flex justify-end gap-3">
+        <div className="form-actions">
           <Link to="/" className="btn btn-gray">Cancel</Link>
-          <button type="submit" className="btn btn-green">Save Client</button>
+          <button type="submit" className="btn btn-blue">Save Client</button>
         </div>
       </form>
     </div>

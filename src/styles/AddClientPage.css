@@ -1,0 +1,89 @@
+.add-client-container {
+  max-width: 32rem;
+  margin: 0 auto;
+  background-color: #1e293b; /* Slate-800 background for card */
+  padding: 2rem;            /* equivalent to p-8 */
+  border-radius: 0.75rem;   /* rounded-xl */
+  box-shadow: 0 4px 8px rgba(0,0,0,0.4); /* similar to Tailwind shadow-lg */
+}
+
+/* Title text styling */
+.add-client-container h2 {
+  font-size: 1.875rem;      /* text-3xl (~30px) */
+  font-weight: 700;
+  margin-bottom: 1.5rem;    /* mb-6 */
+  color: #f1f5f9;           /* gray-100 (light text) */
+}
+
+/* Form labels styling */
+.add-client-container label {
+  display: block;
+  font-size: 0.875rem;      /* text-sm */
+  font-weight: 500;
+  color: #d1d5db;           /* gray-300 text for labels */
+  margin-bottom: 0.5rem;    /* mb-2 */
+}
+
+/* Spacing for form fields */
+.form-field {
+  margin-bottom: 1rem;      /* base spacing between fields (mb-4) */
+}
+.image-field {
+  margin-bottom: 1.5rem;    /* extra spacing after image field (mb-6) */
+}
+
+/* Layout for image + upload button row */
+.image-upload-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;                /* gap-4 (16px space between avatar and button) */
+  margin-top: 0.5rem;       /* mt-2 (space between label and the row) */
+}
+
+/* Avatar preview circle (for image or icon) */
+.avatar-preview {
+  width: 6rem;
+  height: 6rem;                    /* 96px circle (Tailwind w-24 h-24) */
+  background-color: #334155;       /* slate-700 background */
+  border: 2px solid #475569;       /* slate-600 border outline */
+  border-radius: 50%;             /* fully rounded circle */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  flex-shrink: 0;                 /* don’t shrink the avatar on small screens */
+}
+
+/* Image fills the entire avatar circle */
+.avatar-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Placeholder user icon styling (inside avatar preview) */
+.avatar-icon {
+  font-size: 3rem;                /* ~48px, matching w-12/h-12 icon size */
+  color: #64748b;                 /* slate-500 color for the user emoji icon */
+}
+
+/* Error message text */
+.form-error {
+  color: #f87171;                 /* red-400 text for errors */
+  font-size: 0.875rem;            /* text-sm */
+  margin-top: -0.5rem;            /* -mt-2 (pull up to overlap field spacing slightly) */
+  margin-bottom: 1rem;            /* mb-4 (space below error message) */
+}
+
+/* Action buttons container (Cancel/Save) */
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;                     /* gap-4 between buttons */
+  margin-top: 2rem;              /* mt-8 space above the buttons */
+}
+
+/* Hide the file input element (it’s triggered via the Upload button) */
+.hidden-file-input {
+  display: none;
+}
