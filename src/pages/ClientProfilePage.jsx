@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { useTextToSpeech } from "../hooks/useTextToSpeech";
+import { useTextToSpeech } from '../hooks/useTextToSpeech';
 import OptionSection from '../components/OptionSection';
 import ConfirmationModal from '../components/ConfirmationModal';
 import MoodTracker from '../components/MoodTracker';
 import Diary from '../components/Diary';
 import Icon from '../components/Icon';
 import { DEFAULT_ACTIVITIES, DEFAULT_MEALS } from '../data/constants';
+import '../styles/ClientProfilePage.css';
 
 const ClientProfilePage = ({
   clients,
@@ -33,12 +34,11 @@ const ClientProfilePage = ({
     );
   }
 
-  // Speak the label when an option (activity/meal) is clicked
+  // Wrapper functions to include this client's ID for actions
   const handleOptionClick = (label) => {
+    // Speak the option label (text-to-speech) when any activity/meal button is clicked
     speak(label);
   };
-
-  // Wrap handlers to include this client's id
   const handleAddClientActivity = (label, icon, date, time) => {
     onAddActivity(client.id, label, icon, date, time);
   };
@@ -52,12 +52,11 @@ const ClientProfilePage = ({
     onAddDiaryEntry(client.id, content);
   };
 
-  const confirmDeleteHandler = () => {
+  const handleConfirmDelete = () => {
     onDeleteClient(client.id);
     setDeleteModalOpen(false);
     navigate('/');
   };
-
   const handleDeleteClientActivity = (activityId) => {
     onDeleteActivity(client.id, activityId);
   };
@@ -66,46 +65,43 @@ const ClientProfilePage = ({
   };
 
   return (
-    <div className="max-w-5xl mx-auto p-4 space-y-6">
-      {/* Header section: profile image, greeting, and action buttons */}
-      <div className="flex flex-col sm:flex-row items-center justify-between mb-8 gap-4 flex-wrap">
+    <div className="profile-container">
+      {/* Header: profile image, greeting, and action buttons */}
+      <div className="profile-header">
         {/* Client image and greeting */}
-        <div className="flex items-center gap-4">
+        <div className="profile-user">
           <img 
-            src={client.imageUrl} 
-            alt={client.name} 
-            className="w-20 h-20 rounded-full object-cover shadow-lg border-4 border-slate-700" 
+            src={client.imageUrl}
+            alt={client.name}
+            className="profile-img"
           />
-          <h2 className="text-4xl font-bold text-gray-100">Hi, {client.name}!</h2>
+          <h2 className="profile-greeting">Hi, {client.name}!</h2>
         </div>
-        {/* Action buttons */}
-        <div className="flex items-center gap-2">
-          {/* Calendar button */}
-          <Link
-            to={`/client/${client.id}/calendar`}
-            className="inline-flex items-center px-4 py-2 bg-purple-600 text-white font-semibold rounded-lg shadow-md hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-800 focus:ring-purple-500 transition"
+        {/* Profile action buttons */}
+        <div className="profile-actions">
+          <Link 
+            to={`/client/${client.id}/calendar`} 
+            className="btn btn-purple" 
             title="View Calendar"
           >
-            <Icon name="calendar" className="w-5 h-5 mr-2" />
+            <Icon name="calendar" className="btn-icon" />
             <span>Calendar</span>
           </Link>
-          {/* Change Profile button (go back home to choose another client) */}
           <Link 
             to="/" 
-            className="inline-flex items-center px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-800 focus:ring-blue-500 transition"
+            className="btn btn-blue" 
             title="Change Profile"
           >
-            {/* Home icon (inline SVG) */}
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+            {/* Home icon */}
+            <svg xmlns="http://www.w3.org/2000/svg" className="btn-icon" viewBox="0 0 20 20" fill="currentColor">
               <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
             </svg>
             <span>Change Profile</span>
           </Link>
-          {/* Delete Profile button */}
           <button 
-            type="button"
-            onClick={() => setDeleteModalOpen(true)}
-            className="inline-flex items-center px-4 py-2 bg-red-600 text-white font-semibold rounded-lg shadow-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-800 focus:ring-red-500 transition"
+            type="button" 
+            onClick={() => setDeleteModalOpen(true)} 
+            className="btn btn-red" 
             aria-label="Delete client profile"
           >
             Delete Profile
@@ -113,9 +109,9 @@ const ClientProfilePage = ({
         </div>
       </div>
 
-      {/* Mood tracker and diary come first, as in original design */}
+      {/* Mood Tracker and Diary sections */}
       <MoodTracker moodHistory={client.moodHistory} onAddMood={handleAddClientMoodEntry} />
-      <Diary diaryEntries={client.diaryEntries} onAddDiaryEntry={handleAddClientDiaryEntry} />
+      <Diary diaryEntries={client.diaryEntries} onAddEntry={handleAddClientDiaryEntry} />
 
       {/* Activities and Meals sections */}
       <OptionSection 
@@ -143,7 +139,7 @@ const ClientProfilePage = ({
       <ConfirmationModal 
         isOpen={isDeleteModalOpen}
         onClose={() => setDeleteModalOpen(false)}
-        onConfirm={confirmDeleteHandler}
+        onConfirm={handleConfirmDelete}
         title="Delete Profile"
         message={
           <>

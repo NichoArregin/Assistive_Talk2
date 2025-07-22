@@ -2,74 +2,71 @@
   background-color: #1e293b;  /* slate-800 */
   padding: 1.5rem;
   border-radius: 0.75rem;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 0 1rem rgba(0, 0, 0, 0.5);
   margin-bottom: 2rem;
 }
+
 .diary h3 {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: #f1f5f9;
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  font-size: 1.5rem;        /* text-2xl */
+  font-weight: 600;
+  color: #e5e7eb;          /* gray-200 */
   margin-bottom: 1rem;
 }
 .diary-icon {
   width: 1.5rem;
   height: 1.5rem;
+  fill: currentColor;      /* icon inherits text color */
 }
 
-/* Form styles */
 .diary-form {
   margin-bottom: 1.5rem;
 }
-.diary-text {
+.diary-form .form-input {
   width: 100%;
   resize: vertical;
 }
-.save-entry {
+
+.save-btn-container {
   text-align: right;
   margin-top: 0.5rem;
 }
-.save-entry .btn {
-  font-weight: 600;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-}
-.save-entry .btn:disabled {
-  background-color: #475569;  /* slate-600 */
-  cursor: not-allowed;
-}
 
-/* Entries list */
-.diary-entries h4 {
+.diary h4 {
   font-weight: 600;
-  color: #d1d5db;
+  color: #d1d5db;  /* gray-300 */
   margin-bottom: 0.75rem;
 }
-.entries-list {
-  max-height: 20rem;
+
+.diary-entries {
+  max-height: 20rem;        /* limit height, make scrollable */
   overflow-y: auto;
-  padding-right: 0.5rem;
+  padding-right: 0.5rem;    /* space for scrollbar */
 }
-.entry-item {
-  background: rgba(51,65,85,0.5);  /* slate-700/50 */
+
+.diary-entry {
+  background: rgba(51, 65, 85, 0.5);  /* slate-700 at 50% */
   padding: 1rem;
   border-radius: 0.5rem;
   margin-bottom: 0.75rem;
 }
-.entry-content {
+.entry-text {
+  color: #f1f5f9;           /* gray-100 */
   white-space: pre-wrap;
-  color: #f1f5f9;
   margin: 0;
 }
 .entry-time {
   text-align: right;
-  font-size: 0.75rem;
-  color: #94a3b8;
+  font-size: 0.75rem;       /* text-xs */
+  color: #64748b;           /* gray-500 (slate-500) */
   margin-top: 0.5rem;
+  margin-bottom: 0;
 }
+
 .no-entries {
   text-align: center;
-  color: #94a3b8;
-  padding: 2rem 0;
+  color: #94a3b8;           /* gray-400 */
+  padding: 1.5rem 0;
 }
