@@ -1,0 +1,50 @@
+.mood-section {
+  margin: 2rem 0;
+  padding: 1rem;
+  background-color: #1e1e2f;
+  border-radius: 10px;
+}
+
+.mood-buttons {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.mood-btn {
+  font-size: 1.8rem;
+  background: #2a2a3f;
+  color: white;
+  border: none;
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.mood-btn:hover {
+  transform: scale(1.1);
+  background-color: #3d3d5a;
+}
+
+.mood-history ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.mood-history li {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.25rem 0;
+  border-bottom: 1px solid #333;
+}
+
+.mood-emoji {
+  font-size: 1.5rem;
+}
+
+.mood-time {
+  font-size: 0.8rem;
+  color: #bbb;
+}
