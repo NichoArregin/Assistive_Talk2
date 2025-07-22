@@ -1,57 +1,80 @@
 import React, { useState } from "react";
-import "../styles/AddOptionModal.css";
+import "../styles/Modal.css";
 
 function AddOptionModal({ type, onClose, onAddOption, defaultOptions }) {
-  const [activeTab, setActiveTab] = useState("library");
-  const [customName, setCustomName] = useState("");
+  const [tab, setTab] = useState("library");
+  const [customLabel, setCustomLabel] = useState("");
+  const [customIcon, setCustomIcon] = useState("");
+  const [date, setDate] = useState("");
+  const [time, setTime] = useState("");
 
-  const handleLibraryClick = (option) => {
-    onAddOption(option.label, option.icon);
+  const handleAdd = (label, icon) => {
+    if (!date || !time) {
+      alert("Please select date and time.");
+      return;
+    }
+    onAddOption({ label, icon, date, time });
     onClose();
   };
 
-  const handleCustomSubmit = (e) => {
-    e.preventDefault();
-    if (!customName) return;
-    onAddOption(customName, "default");
-    onClose();
+  const handleCustomAdd = () => {
+    if (!customLabel || !customIcon || !date || !time) {
+      alert("Please complete all fields.");
+      return;
+    }
+    handleAdd(customLabel, customIcon);
   };
 
   return (
     <div className="modal-backdrop">
-      <div className="modal-content">
-        <button className="close-btn" onClick={onClose}>×</button>
-
+      <div className="modal">
+        <h2>Add {type}</h2>
         <div className="tabs">
-          <button onClick={() => setActiveTab("library")} className={activeTab === "library" ? "active" : ""}>
+          <button onClick={() => setTab("library")} className={tab === "library" ? "active" : ""}>
             Library
           </button>
-          <button onClick={() => setActiveTab("custom")} className={activeTab === "custom" ? "active" : ""}>
+          <button onClick={() => setTab("custom")} className={tab === "custom" ? "active" : ""}>
             Custom
           </button>
         </div>
 
-        {activeTab === "library" && (
-          <div className="library-list">
-            {defaultOptions.map((opt, index) => (
-              <button key={index} onClick={() => handleLibraryClick(opt)} className="library-option">
-                <span>{opt.label}</span>
+        {tab === "library" ? (
+          <div className="library-options">
+            {defaultOptions.map((item, idx) => (
+              <button
+                key={idx}
+                className="option"
+                onClick={() => handleAdd(item.label, item.icon)}
+              >
+                <span style={{ fontSize: "1.5rem" }}>{item.icon}</span>
+                <span>{item.label}</span>
               </button>
             ))}
           </div>
-        )}
-
-        {activeTab === "custom" && (
-          <form onSubmit={handleCustomSubmit} className="custom-form">
+        ) : (
+          <div className="custom-form">
             <input
               type="text"
-              placeholder={`Enter custom ${type}`}
-              value={customName}
-              onChange={(e) => setCustomName(e.target.value)}
+              placeholder="Label"
+              value={customLabel}
+              onChange={(e) => setCustomLabel(e.target.value)}
             />
-            <button type="submit">Add</button>
-          </form>
+            <input
+              type="text"
+              placeholder="Emoji/Icon"
+              value={customIcon}
+              onChange={(e) => setCustomIcon(e.target.value)}
+            />
+            <button onClick={handleCustomAdd}>Add</button>
+          </div>
         )}
+
+        <div className="date-time-picker">
+          <label>Date: <input type="date" value={date} onChange={(e) => setDate(e.target.value)} /></label>
+          <label>Time: <input type="time" value={time} onChange={(e) => setTime(e.target.value)} /></label>
+        </div>
+
+        <button onClick={onClose} className="close-btn">Close</button>
       </div>
     </div>
   );
