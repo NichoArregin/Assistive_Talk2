@@ -1,70 +1,50 @@
 import React, { useState, useEffect } from "react";
 import { HashRouter as Router, Routes, Route } from "react-router-dom";
+import Header from "./components/Header";
 import HomePage from "./pages/HomePage";
 import AddClientPage from "./pages/AddClientPage";
 import ClientProfilePage from "./pages/ClientProfilePage";
 import CalendarPage from "./pages/CalendarPage";
-import Header from "./components/Header";
+import { loadClients, saveClients } from "./data/clients";
 
 function App() {
-  const [clients, setClients] = useState(() => {
-    const stored = localStorage.getItem("assistive-talk-clients");
-    return stored ? JSON.parse(stored) : [];
-  });
+  const [clients, setClients] = useState([]);
 
   useEffect(() => {
-    localStorage.setItem("assistive-talk-clients", JSON.stringify(clients));
+    const storedClients = loadClients();
+    if (storedClients) {
+      setClients(storedClients);
+    }
+  }, []);
+
+  useEffect(() => {
+    saveClients(clients);
   }, [clients]);
 
-  const handleAddClient = (newClient) => {
-    setClients([...clients, newClient]);
+  const handleAddClient = (client) => {
+    setClients([...clients, client]);
   };
 
   const handleDeleteClient = (clientId) => {
     setClients(clients.filter((c) => c.id !== clientId));
   };
 
-  const handleAddMood = (clientId, mood) => {
-    const updatedClients = clients.map((client) => {
-      if (client.id === clientId) {
-        return {
-          ...client,
-          moods: [
-            ...client.moods,
-            {
-              mood: mood,
-              date: new Date().toLocaleDateString(),
-            },
-          ],
-        };
-      }
-      return client;
-    });
-    setClients(updatedClients);
+  const handleUpdateClient = (updatedClient) => {
+    setClients(
+      clients.map((c) => (c.id === updatedClient.id ? updatedClient : c))
+    );
   };
 
-  const handleAddDiaryEntry = (clientId, entryText) => {
-    const updatedClients = clients.map((client) => {
-      if (client.id === clientId) {
-        return {
-          ...client,
-          diaryEntries: [
-            ...client.diaryEntries,
-            {
-              text: entryText,
-              date: new Date().toLocaleDateString(),
-            },
-          ],
-        };
-      }
-      return client;
-    });
-    setClients(updatedClients);
-  };
+  const todaysAlerts = clients.flatMap((client) =>
+    client.options?.filter((opt) => {
+      const today = new Date().toISOString().split("T")[0];
+      return opt.date === today;
+    }).map((opt) => ({ ...opt, clientName: client.name }))
+  );
 
   return (
     <Router>
-      <Header clients={clients} />
+      <Header todaysAlerts={todaysAlerts} />
       <Routes>
         <Route path="/" element={<HomePage clients={clients} />} />
         <Route
@@ -76,10 +56,7 @@ function App() {
           element={
             <ClientProfilePage
               clients={clients}
-              onDeleteClient={handleDeleteClient}
-              onAddMood={handleAddMood}
-              onAddDiaryEntry={handleAddDiaryEntry}
-              setClients={setClients}
+              onUpdateClient={handleUpdateClient}
             />
           }
         />

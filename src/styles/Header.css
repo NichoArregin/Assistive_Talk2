@@ -1,0 +1,39 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background-color: #1a1a1a;
+  color: white;
+}
+
+.nav a {
+  margin-left: 1rem;
+  color: white;
+  text-decoration: none;
+}
+
+.title a {
+  font-weight: bold;
+  font-size: 1.5rem;
+  color: white;
+  text-decoration: none;
+}
+
+.alerts {
+  position: relative;
+  cursor: pointer;
+}
+
+.alerts-dropdown {
+  position: absolute;
+  top: 2rem;
+  right: 0;
+  background: #333;
+  color: white;
+  padding: 0.5rem;
+  border: 1px solid #555;
+  border-radius: 5px;
+  z-index: 10;
+  min-width: 200px;
+}
