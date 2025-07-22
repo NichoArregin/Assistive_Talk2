@@ -1,21 +1,20 @@
-// src/components/ClientCard.jsx
-import React from "react";
-import { Link } from "react-router-dom";
-import "../styles/ClientCard.css";
+import React from 'react';
+import { Link } from 'react-router-dom';
 
-const placeholder = "https://via.placeholder.com/150?text=Client";
-
-function ClientCard({ client }) {
+const ClientCard = ({ client }) => {
   return (
-    <Link to={`/client/${client.id}`} className="client-card">
-      <img
-        src={client.image || placeholder}
-        alt={client.name}
-        className="client-image"
+    <Link 
+      to={`/client/${client.id}`} 
+      className="block bg-slate-700 p-4 rounded-lg text-center hover:bg-slate-600 transition"
+    >
+      <img 
+        src={client.imageUrl} 
+        alt={client.name} 
+        className="mx-auto mb-2 w-16 h-16 rounded-full object-cover" 
       />
-      <div className="client-name">{client.name}</div>
+      <h3 className="text-lg font-bold text-gray-100">{client.name}</h3>
     </Link>
   );
-}
+};
 
 export default ClientCard;

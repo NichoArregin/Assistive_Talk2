@@ -1,15 +1,17 @@
 import { useCallback } from "react";
 
-const useTextToSpeech = () => {
+function useTextToSpeech() {
   const speak = useCallback((text) => {
-    if (!window.speechSynthesis) return;
-
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = "en-AU"; // or "en-US" based on preference
-    window.speechSynthesis.speak(utterance);
+    if ("speechSynthesis" in window) {
+      const utterance = new SpeechSynthesisUtterance(text);
+      window.speechSynthesis.speak(utterance);
+    } else {
+      console.warn("Text-to-speech not supported.");
+    }
   }, []);
 
-  return { speak };
-};
+  return speak;
+}
 
 export default useTextToSpeech;
+
