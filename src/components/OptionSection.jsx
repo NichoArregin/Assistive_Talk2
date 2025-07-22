@@ -2,7 +2,7 @@ import React, { useState, useMemo } from 'react';
 import OptionButton from './OptionButton';
 import Icon from '../components/Icon';
 import AddOptionModal from './AddOptionModal';
-
+import "../styles/OptionSection.css"
 const OptionSection = ({ 
   title, 
   options, 

@@ -1,5 +1,5 @@
 import React from "react";
-import useTextToSpeech from '../hooks/useTextToSpeech';
+import { useTextToSpeech } from "../hooks/useTextToSpeech";
 import "../styles/OptionButton.css"; // Assuming you have a CSS file for styling
 
 const OptionButton = ({ label, icon, date, time }) => {

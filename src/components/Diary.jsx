@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import "../styles/Diary.css"; // Assuming you have a CSS file for styling
 
 const Diary = ({ diaryEntries, onAddEntry }) => {
   const [entryContent, setEntryContent] = useState('');

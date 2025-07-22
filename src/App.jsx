@@ -5,6 +5,7 @@ import ClientProfilePage from './pages/ClientProfilePage';
 import CalendarPage from './pages/CalendarPage';
 import AddClientPage from './pages/AddClientPage';
 import Header from './components/Header';
+import "./styles/Header.css"; // If not already imported there
 
 const CLIENTS_STORAGE_KEY = 'assistive-talk-clients';
 

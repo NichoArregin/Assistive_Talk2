@@ -1,6 +1,7 @@
+// src/hooks/useTextToSpeech.js
 import { useCallback } from "react";
 
-function useTextToSpeech() {
+export function useTextToSpeech() {
   const speak = useCallback((text) => {
     if ("speechSynthesis" in window) {
       const utterance = new SpeechSynthesisUtterance(text);
@@ -14,4 +15,3 @@ function useTextToSpeech() {
 }
 
 export default useTextToSpeech;
-
