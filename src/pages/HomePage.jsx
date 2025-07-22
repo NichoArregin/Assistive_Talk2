@@ -13,51 +13,66 @@ const HomePage = ({ clients }) => {
     );
   }, [searchTerm, clients]);
 
-  // Card for adding a new client
+  // Card component for adding a new client (styled as in original)
   const AddClientCard = () => (
     <Link 
-      to="/add" 
-      className="flex flex-col items-center justify-center p-4 bg-slate-700 rounded-lg text-gray-400 hover:bg-slate-600 hover:text-white transition"
+      to="/add-client"
+      aria-label="Add new client"
+      className="group flex flex-col items-center justify-center bg-slate-800/50 border-2 border-dashed border-slate-600 rounded-xl shadow-lg hover:shadow-blue-500/20 hover:border-blue-500 focus:border-blue-500 transition-all duration-300 ease-in-out transform hover:-translate-y-1 focus:outline-none focus:ring-4 focus:ring-blue-500 focus:ring-opacity-75"
     >
-      <Icon name="plus" className="text-4xl mb-2" />
-      <span className="font-medium">Add Client</span>
+      <div className="text-slate-500 group-hover:text-blue-400 transition-colors duration-300 p-4">
+        <Icon name="plus" className="w-16 h-16" />
+      </div>
+      <p className="font-bold text-slate-400 group-hover:text-gray-100 transition-colors duration-300">
+        Add Client
+      </p>
     </Link>
   );
 
   return (
-    <div className="p-4">
-      <div className="relative mb-4">
+    <div className="max-w-7xl mx-auto p-4">
+      {/* Search bar */}
+      <div className="relative mb-8">
         <Icon 
           name="search" 
-          className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+          className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5 pointer-events-none" 
         />
         <input 
           type="text"
+          placeholder="Search for a client..." 
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           className="w-full p-3 pl-10 bg-slate-800 border border-slate-600 text-gray-100 placeholder-gray-400 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          placeholder="Search clients"
           aria-label="Search clients"
         />
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+
+      {/* Clients grid */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
+        {/* Add Client card first */}
+        <AddClientCard />
+        {/* Client list or empty state */}
         {filteredClients.length > 0 ? (
           filteredClients.map(client => (
             <ClientCard key={client.id} client={client} />
           ))
         ) : (
-          !searchTerm && clients.length === 0 && (
-            <p className="text-center text-gray-400 py-4">
-              No clients yet. Add one to get started!
-            </p>
+          !searchTerm && clients.length === 0 ? (
+            // No clients at all
+            <div className="col-span-full text-center py-10 px-4">
+              <p className="text-gray-400 text-lg">
+                No clients yet. Add one to get started!
+              </p>
+            </div>
+          ) : (
+            // No results for search
+            <div className="col-span-full text-center py-10 px-4">
+              <p className="text-gray-400 text-lg">
+                No clients found matching your search.
+              </p>
+            </div>
           )
         )}
-        {searchTerm && filteredClients.length === 0 && (
-          <p className="text-center text-gray-400 py-4">
-            No clients found matching your search.
-          </p>
-        )}
-        <AddClientCard />
       </div>
     </div>
   );

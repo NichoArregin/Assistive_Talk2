@@ -5,7 +5,6 @@ import ClientProfilePage from './pages/ClientProfilePage';
 import CalendarPage from './pages/CalendarPage';
 import AddClientPage from './pages/AddClientPage';
 import Header from './components/Header';
-import "./styles/Header.css"; // If not already imported there
 
 const CLIENTS_STORAGE_KEY = 'assistive-talk-clients';
 
@@ -22,7 +21,6 @@ const getInitialState = (key, defaultValue) => {
 function App() {
   const [clients, setClients] = useState(() => getInitialState(CLIENTS_STORAGE_KEY, []));
 
-  // Persist clients to localStorage whenever it changes
   useEffect(() => {
     try {
       localStorage.setItem(CLIENTS_STORAGE_KEY, JSON.stringify(clients));
@@ -31,7 +29,7 @@ function App() {
     }
   }, [clients]);
 
-  // Handlers to modify clients state
+  // Handlers to modify clients state (same as before)
   const handleAddClient = (name, imageUrl) => {
     const newClient = {
       id: Date.now().toString(),
@@ -44,11 +42,9 @@ function App() {
     };
     setClients(prev => [...prev, newClient]);
   };
-
   const handleDeleteClient = (clientId) => {
     setClients(prev => prev.filter(client => client.id !== clientId));
   };
-
   const handleAddActivity = (clientId, label, icon, date, time) => {
     const newActivity = { id: `act_${Date.now()}`, label, icon, date, time };
     setClients(prev => prev.map(client =>
@@ -57,7 +53,6 @@ function App() {
         : client
     ));
   };
-
   const handleDeleteActivity = (clientId, activityId) => {
     setClients(prev => prev.map(client =>
       client.id === clientId 
@@ -65,7 +60,6 @@ function App() {
         : client
     ));
   };
-
   const handleAddMeal = (clientId, label, icon, date, time) => {
     const newMeal = { id: `meal_${Date.now()}`, label, icon, date, time };
     setClients(prev => prev.map(client =>
@@ -74,7 +68,6 @@ function App() {
         : client
     ));
   };
-
   const handleDeleteMeal = (clientId, mealId) => {
     setClients(prev => prev.map(client =>
       client.id === clientId 
@@ -82,19 +75,17 @@ function App() {
         : client
     ));
   };
-
   const handleAddMoodEntry = (clientId, mood) => {
     const newMoodEntry = { id: `mood_${Date.now()}`, mood, timestamp: new Date().toISOString() };
     setClients(prev => prev.map(client =>
       client.id === clientId 
         ? { 
             ...client, 
-            moodHistory: [newMoodEntry, ...client.moodHistory].slice(0, 5)  // keep last 5 moods
+            moodHistory: [newMoodEntry, ...client.moodHistory].slice(0, 5) 
           } 
         : client
     ));
   };
-
   const handleAddDiaryEntry = (clientId, content) => {
     const newDiaryEntry = { id: `diary_${Date.now()}`, content, timestamp: new Date().toISOString() };
     setClients(prev => prev.map(client =>
@@ -104,7 +95,7 @@ function App() {
     ));
   };
 
-  // Compute today's alerts (events happening today) for the header
+  // Compute today's alerts for header (same logic as before)
   const todaysAlerts = useMemo(() => {
     const today = new Date().toISOString().split('T')[0];
     const alerts = [];
@@ -127,27 +118,33 @@ function App() {
 
   return (
     <HashRouter>
-      <Header alerts={todaysAlerts} />
-      <Routes>
-        <Route path="/" element={<HomePage clients={clients} />} />
-        <Route 
-          path="/client/:clientId" 
-          element={
-            <ClientProfilePage 
-              clients={clients}
-              onAddActivity={handleAddActivity}
-              onAddMeal={handleAddMeal}
-              onAddMoodEntry={handleAddMoodEntry}
-              onAddDiaryEntry={handleAddDiaryEntry}
-              onDeleteClient={handleDeleteClient}
-              onDeleteActivity={handleDeleteActivity}
-              onDeleteMeal={handleDeleteMeal}
-            />
-          } 
-        />
-        <Route path="/calendar/:clientId" element={<CalendarPage clients={clients} />} />
-        <Route path="/add" element={<AddClientPage onAddClient={handleAddClient} />} />
-      </Routes>
+      {/* Container with full-screen min height, dark background, base font and text color */}
+      <div className="min-h-screen bg-slate-900 font-sans text-gray-100">
+        {/* Header with alerts */}
+        <Header alerts={todaysAlerts} />
+        {/* Main content area with some padding */}
+        <main className="p-4 sm:p-6 lg:p-8">
+          <Routes>
+            <Route path="/" element={<HomePage clients={clients} />} />
+            <Route path="/client/:clientId" element={
+              <ClientProfilePage 
+                clients={clients}
+                onAddActivity={handleAddActivity}
+                onAddMeal={handleAddMeal}
+                onAddMoodEntry={handleAddMoodEntry}
+                onAddDiaryEntry={handleAddDiaryEntry}
+                onDeleteClient={handleDeleteClient}
+                onDeleteActivity={handleDeleteActivity}
+                onDeleteMeal={handleDeleteMeal}
+              />
+            } />
+            {/* Use original nested calendar path: /client/:clientId/calendar */}
+            <Route path="/client/:clientId/calendar" element={<CalendarPage clients={clients} />} />
+            {/* Use original add-client path: /add-client */}
+            <Route path="/add-client" element={<AddClientPage onAddClient={handleAddClient} />} />
+          </Routes>
+        </main>
+      </div>
     </HashRouter>
   );
 }
