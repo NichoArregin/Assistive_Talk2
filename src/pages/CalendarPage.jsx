@@ -11,40 +11,48 @@ const CalendarPage = ({ clients }) => {
   if (!client) {
     return (
       <div className="calendar-page">
-        <h2>Client not found</h2>
-        <Link to="/" className="back-button">Go back</Link>
+        <h2 className="calendar-title">Client not found</h2>
+        <Link to="/" className="back-button">Go back home</Link>
       </div>
     );
   }
 
-  const events = useMemo(() => [
-    ...client.activities.map(a => ({ ...a, type: 'activity' })),
-    ...client.meals.map(m => ({ ...m, type: 'meal' })),
-  ], [client.activities, client.meals]);
+  const events = useMemo(() => {
+    return [
+      ...client.activities.map(a => ({ ...a, type: 'activity' })),
+      ...client.meals.map(m => ({ ...m, type: 'meal' })),
+    ];
+  }, [client.activities, client.meals]);
+
+  const handlePrevMonth = () => {
+    setCurrentDate(prev => new Date(prev.getFullYear(), prev.getMonth() - 1, 1));
+  };
+  const handleNextMonth = () => {
+    setCurrentDate(prev => new Date(prev.getFullYear(), prev.getMonth() + 1, 1));
+  };
+  const handleToday = () => {
+    setCurrentDate(new Date());
+  };
 
   return (
     <div className="calendar-page">
       <div className="calendar-header">
-        <img src={client.imageUrl} alt="profile" className="calendar-avatar" />
-        <div>
-          <h2 className="calendar-title">{client.name}'s Calendar</h2>
-          <Link to={`/client/${client.id}`} className="back-button">
-            &larr; Back to Profile
-          </Link>
+        <div className="client-info">
+          <img src={client.imageUrl} alt={client.name} className="calendar-avatar" />
+          <div>
+            <h2 className="calendar-title">{client.name}'s Calendar</h2>
+            <Link to={`/client/${client.id}`} className="back-button">&larr; Back to Profile</Link>
+          </div>
         </div>
       </div>
 
       <div className="calendar-container">
-        <Calendar 
+        <Calendar
           date={currentDate}
           events={events}
-          onPrevMonth={() =>
-            setCurrentDate(prev => new Date(prev.getFullYear(), prev.getMonth() - 1, 1))
-          }
-          onNextMonth={() =>
-            setCurrentDate(prev => new Date(prev.getFullYear(), prev.getMonth() + 1, 1))
-          }
-          onToday={() => setCurrentDate(new Date())}
+          onPrevMonth={handlePrevMonth}
+          onNextMonth={handleNextMonth}
+          onToday={handleToday}
         />
       </div>
     </div>
