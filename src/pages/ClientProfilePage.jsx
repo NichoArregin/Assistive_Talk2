@@ -60,8 +60,7 @@ function ClientProfilePage({
           >
             🏠 Change Profile
           </button>
-          <button
-            className="btn delete-btn"
+          <button className="btn profile-delete-btn"
             onClick={() => setDeleteModalOpen(true)}
             aria-label="Delete Profile"
           >
@@ -123,3 +122,4 @@ function ClientProfilePage({
 }
 
 export default ClientProfilePage;
+              

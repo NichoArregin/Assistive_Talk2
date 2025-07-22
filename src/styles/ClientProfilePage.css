@@ -21,8 +21,11 @@
 
 .profile-buttons {
   display: flex;
-  gap: 1rem;
   flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: flex-end;
+  align-items: center;
+  width: 100%;
   margin-left: auto;
 }
 
@@ -55,11 +58,11 @@
   background-color: #1d4ed8;
 }
 
-.delete-btn {
+.profile-delete-btn {
   background-color: #dc2626;
 }
 
-.delete-btn:hover {
+.profile-delete-btn:hover {
   background-color: #b91c1c;
 }
 
