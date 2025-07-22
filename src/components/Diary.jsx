@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import "./Diary.css";
+import "../styles/Diary.css";
+
 function Diary({ client, onAddDiaryEntry }) {
   const [entryText, setEntryText] = useState("");
 

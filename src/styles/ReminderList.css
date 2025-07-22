@@ -1,0 +1,22 @@
+.reminders-list {
+  background-color: #f1f5f9;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border: 1px solid #cbd5e1;
+}
+
+.reminders-list h3 {
+  margin: 0 0 0.5rem 0;
+}
+
+.reminders-list ul {
+  list-style-type: disc;
+  margin-left: 1.2rem;
+}
+
+.reminders-empty {
+  color: #777;
+  font-style: italic;
+  padding: 1rem;
+}
