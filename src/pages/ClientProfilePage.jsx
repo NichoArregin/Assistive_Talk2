@@ -1,98 +1,127 @@
-import React from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useParams, Link } from "react-router-dom";
+import MoodTracker from "../components/MoodTracker";
+import Diary from "../components/Diary";
+import OptionSection from "../components/OptionSection";
+import Reminder from "../components/ReminderList";
 import "../styles/ClientProfilePage.css";
 
-const moodOptions = [
-  { emoji: "😊", label: "Happy", color: "#34d399" },
-  { emoji: "😐", label: "Content", color: "#60a5fa" },
-  { emoji: "😢", label: "Sad", color: "#facc15" },
-  { emoji: "😠", label: "Upset", color: "#f87171" },
-];
+function ClientPage({ clients, onUpdateClient }) {
+  const { id } = useParams();
+  const client = clients.find((c) => c.id === id);
+  const [selectedMood, setSelectedMood] = useState(null);
 
-function ClientProfile({ clients, updateClientMood, updateClientDiary }) {
-  const { clientId } = useParams();
-  const client = clients.find((c) => c.id === clientId);
-  const navigate = useNavigate();
+  const moodOptions = [
+    { mood: "Happy", emoji: "😊", color: "green" },
+    { mood: "Content", emoji: "😐", color: "blue" },
+    { mood: "Sad", emoji: "😭", color: "orange" },
+    { mood: "Upset", emoji: "😠", color: "red" },
+  ];
 
   const handleMoodClick = (mood) => {
-    updateClientMood(clientId, mood.label);
-    const audio = new Audio(`/sounds/${mood.label.toLowerCase()}.mp3`);
-    audio.play();
+    const newMood = { mood, date: new Date().toISOString() };
+    const updatedClient = {
+      ...client,
+      moods: [...(client.moods || []), newMood],
+    };
+    onUpdateClient(updatedClient);
+    setSelectedMood(mood);
+    const sound = new Audio("/sounds/click.mp3");
+    sound.play();
   };
 
-  const handleDiaryChange = (e) => {
-    updateClientDiary(clientId, e.target.value);
+  const handleDiaryChange = (newEntry) => {
+    const updatedClient = {
+      ...client,
+      diary: [...(client.diary || []), newEntry],
+    };
+    onUpdateClient(updatedClient);
   };
 
-  const handleDelete = () => {
-    const confirmDelete = window.confirm("Are you sure you want to delete this client?");
-    if (confirmDelete) {
-      navigate("/");
-    }
+  const handleOptionUpdate = (type, newOptions) => {
+    const updatedClient = {
+      ...client,
+      [type]: newOptions,
+    };
+    onUpdateClient(updatedClient);
   };
+
+  if (!client) return <div>Client not found</div>;
 
   return (
-    <div className="client-profile">
-      <div className="profile-header">
-        <img src={client.image} alt="Profile" className="profile-picture" />
-        <h1>Hi, {client.name}!</h1>
-        <div className="profile-buttons">
-          <button className="btn calendar-btn" onClick={() => navigate(`/client/${clientId}/calendar`)}>
-            📅 Calendar
-          </button>
-          <button className="btn home-btn" onClick={() => navigate("/")}>
-            🏠 Change Profile
-          </button>
-          <button className="btn delete-btn" onClick={handleDelete}>
-            🗑 Delete Profile
-          </button>
+    <div className="client-container">
+      <div className="client-header">
+        <img
+          src={client.image}
+          alt="Profile"
+          className="client-profile-image" />
+        <h2>Hi, {client.name}!</h2>
+        <div className="client-buttons">
+          <Link to={`/client/${client.id}/calendar`}>
+            <button className="btn calendar-btn">📅 Calendar</button>
+          </Link>
+          <Link to={`/edit/${client.id}`}>
+            <button className="btn edit-btn">🏠 Change Profile</button>
+          </Link>
+          <Link to="/">
+            <button className="btn delete-btn">🗑 Delete Profile</button>
+          </Link>
         </div>
       </div>
 
       <div className="mood-section">
-        <h2>How are you feeling?</h2>
-        <div className="mood-grid">
-          <div className="mood-options">
-            <h3>Log a new mood</h3>
-            <div className="mood-buttons">
-              {moodOptions.map((mood) => (
-                <button
-                  key={mood.label}
-                  className="mood-btn"
-                  style={{ color: mood.color }}
-                  onClick={() => handleMoodClick(mood)}
-                >
-                  <span className="emoji">{mood.emoji}</span>
-                  <p>{mood.label}</p>
-                </button>
-              ))}
-            </div>
+        <div className="mood-log">
+          <h3>How are you feeling?</h3>
+          <p>Log a new mood</p>
+          <div className="mood-buttons">
+            {moodOptions.map((option) => (
+              <MoodButton
+                key={option.mood}
+                mood={option.mood}
+                emoji={option.emoji}
+                color={option.color}
+                onClick={handleMoodClick} />
+            ))}
           </div>
-          <div className="recent-moods">
-            <h3>Recent moods</h3>
-            {client.moods && client.moods.length > 0 ? (
-              <ul>
-                {client.moods.map((mood, index) => (
-                  <li key={index}>{mood}</li>
+        </div>
+        <div className="mood-log">
+          <h3>Recent moods</h3>
+          {client.moods?.length ? (
+            <ul>
+              {client.moods
+                .slice(-5)
+                .reverse()
+                .map((entry, index) => (
+                  <li key={index}>
+                    {entry.mood} - {new Date(entry.date).toLocaleString()}
+                  </li>
                 ))}
-              </ul>
-            ) : (
-              <p>No moods logged yet.</p>
-            )}
-          </div>
+            </ul>
+          ) : (
+            <p>No moods logged yet.</p>
+          )}
         </div>
       </div>
 
-      <div className="diary-section">
-        <h2>📓 Diary</h2>
-        <textarea
-          placeholder="Add a new diary entry..."
-          value={client.diary || ""}
-          onChange={handleDiaryChange}
-        />
-      </div>
+      <DiaryEntry diary={client.diary || []} onSave={handleDiaryChange} />
+
+      <OptionSection
+        title="What would you like to do today?"
+        type="activities"
+        options={client.activities || []}
+        onUpdate={(newOptions) => handleOptionUpdate("activities", newOptions)}
+        clientId={client.id} />
+
+      <OptionSection
+        title="What would you like to eat?"
+        type="foods"
+        options={client.foods || []}
+        onUpdate={(newOptions) => handleOptionUpdate("foods", newOptions)}
+        clientId={client.id} />
+
+      <Reminder client={client} />
     </div>
   );
 }
 
-export default ClientProfile;
+export default ClientPage;
