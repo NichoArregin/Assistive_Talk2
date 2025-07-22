@@ -1,27 +1,83 @@
-/* src/styles/HomePage.css */
-
-.homepage-container {
-  padding: 2rem;
+.home-container {
+  max-width: 80rem;   /* similar to Tailwind max-w-7xl */
+  margin: 0 auto;
+  padding: 2rem 1rem;
 }
 
-.header-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 2rem;
+/* Search bar layout */
+.search-bar {
+  position: relative;
+  margin-bottom: 1.5rem;
+}
+.search-icon {
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1.25rem;
+  height: 1.25rem;
+  color: #94a3b8;  /* gray-400 */
+  pointer-events: none;
+}
+.search-input {
+  padding-left: 2.5rem;  /* space for icon */
 }
 
-.add-btn {
-  padding: 0.6rem 1.2rem;
-  background-color: #3b82f6;
-  color: white;
-  border-radius: 6px;
-  text-decoration: none;
-}
-
+/* Grid of client cards */
 .client-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+  gap: 1.5rem;
+  align-items: start;
+}
+
+/* Message for no clients or no results */
+.no-clients-msg {
+  grid-column: 1 / -1;   /* span full grid width */
+  text-align: center;
+  color: #94a3b8;        /* gray-400 */
+  font-size: 1rem;
+  padding: 2rem 0;
+}
+
+/* "Add Client" card style (dashed outline card) */
+.add-client-card {
   display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  justify-content: flex-start;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background-color: rgba(30,41,59,0.5);  /* slate-800 at 50% opacity */
+  border: 2px dashed #475569;           /* dashed slate-600 border */
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+  text-decoration: none;
+  color: #94a3b8;                      /* initial text color (gray-400) */
+  transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s, color 0.3s;
+}
+.add-client-card:hover {
+  transform: translateY(-0.25rem);
+  border-color: #3b82f6;               /* blue-500 on hover */
+  box-shadow: 0 8px 16px rgba(59,130,246,0.2);
+  color: #fff;
+}
+/* Plus icon inside Add Client card */
+.add-client-icon-wrapper {
+  padding: 0.5rem;
+}
+.add-client-icon {
+  font-size: 4rem;
+  color: #64748b;   /* slate-500 */
+  transition: color 0.3s;
+}
+.add-client-text {
+  font-weight: 600;
+  margin-top: 0.5rem;
+}
+/* Hover state for icon and text */
+.add-client-card:hover .add-client-icon {
+  color: #3b82f6;    /* blue-500 */
+}
+.add-client-card:hover .add-client-text {
+  color: #f1f5f9;    /* gray-100 (white) */
 }

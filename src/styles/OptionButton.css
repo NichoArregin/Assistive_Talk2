@@ -1,14 +1,73 @@
 .option-button {
-  border: 1px solid #ddd;
-  padding: 10px;
-  border-radius: 8px;
-  text-align: center;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  width: 100%;
+  background-color: #334155;  /* slate-700 */
+  border: 2px solid transparent;
+  border-radius: 0.5rem;
   cursor: pointer;
-  background-color: #fdfdfd;
-  transition: transform 0.1s ease;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+.option-button:hover {
+  background-color: #475569;  /* slate-600 */
+}
+.option-button:focus {
+  outline: none;
+  border-color: #3b82f6;      /* blue-500 */
 }
 
-.option-button:hover {
-  transform: scale(1.05);
-  background-color: #e6f7ff;
+/* Delete (X) button in top-right corner */
+.delete-button {
+  position: absolute;
+  top: 0.25rem;
+  right: 0.25rem;
+  padding: 0.25rem;
+  background-color: rgba(30,41,59,0.5); /* slate-800/50 */
+  border: none;
+  border-radius: 9999px;
+  color: #94a3b8;             /* slate-400 */
+  opacity: 0;
+  cursor: pointer;
+  transition: opacity 0.2s, background-color 0.2s, color 0.2s;
+  z-index: 1;
+}
+.option-button:hover .delete-button,
+.option-button:focus .delete-button {
+  opacity: 1;
+}
+.delete-button:hover {
+  background-color: #ef4444;  /* red-500 */
+  color: #ffffff;
+}
+.delete-icon {
+  width: 1rem;
+  height: 1rem;
+}
+
+/* Icon and label inside the option button */
+.option-icon {
+  width: 3rem;
+  height: 3rem;
+  color: #38bdf8;             /* blue-400 for icon fill */
+  margin-bottom: 0.5rem;
+}
+.option-label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #f1f5f9;
+  text-align: center;
+}
+.option-timestamp {
+  margin-top: 0.25rem;
+  font-size: 0.75rem;
+  color: #94a3b8;
+  text-align: center;
+}
+.option-timestamp .timestamp-time {
+  margin-left: 0.5rem;
+  font-family: monospace;
 }

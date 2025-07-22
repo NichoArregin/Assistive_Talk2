@@ -19,7 +19,7 @@ const AddClientPage = ({ onAddClient }) => {
       const reader = new FileReader();
       reader.onloadend = () => {
         setImagePreview(reader.result);
-        setError('');  // clear previous errors
+        setError('');
       };
       reader.readAsDataURL(file);
     }
@@ -39,7 +39,7 @@ const AddClientPage = ({ onAddClient }) => {
       setError('Please upload an image for the client.');
       return;
     }
-    // Add new client and navigate home
+    // Create new client and navigate home
     onAddClient(name.trim(), imagePreview);
     navigate('/');
   };
@@ -48,21 +48,20 @@ const AddClientPage = ({ onAddClient }) => {
     <div className="max-w-lg mx-auto p-4">
       <h2 className="text-2xl font-bold mb-4">Add a New Client Profile</h2>
       <form onSubmit={handleSubmit}>
+        {/* Client Name field */}
         <div className="mb-3">
           <label className="block text-sm font-medium mb-1">Client Name</label>
           <input 
             type="text"
             value={name}
-            onChange={(e) => {
-              setName(e.target.value);
-              if (error) setError('');
-            }}
+            onChange={(e) => { setName(e.target.value); if (error) setError(''); }}
             placeholder="Enter the client's name"
-            className="w-full p-3 bg-slate-700 border border-slate-600 text-gray-100 placeholder-gray-400 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="form-input"
             required
             aria-describedby={error ? 'form-error' : undefined}
           />
         </div>
+        {/* Client Image field */}
         <div className="mb-3">
           <label className="block text-sm font-medium mb-1">Client Image</label>
           <div className="flex items-center gap-4">
@@ -73,45 +72,28 @@ const AddClientPage = ({ onAddClient }) => {
                 className="w-16 h-16 rounded-full object-cover" 
               />
             ) : (
-              <Icon 
-                name="user" 
-                className="w-16 h-16 rounded-full bg-slate-600 flex-shrink-0" 
-              />
+              <Icon name="user" className="w-16 h-16 rounded-full bg-slate-600 flex-shrink-0" />
             )}
-            <button 
-              type="button" 
-              onClick={triggerFileSelect} 
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-            >
+            <button type="button" onClick={triggerFileSelect} className="btn btn-blue">
               Upload Image
             </button>
           </div>
           <input 
-            type="file" 
-            ref={fileInputRef} 
-            onChange={handleImageChange} 
-            className="hidden" 
-            accept="image/*" 
+            type="file"
+            ref={fileInputRef}
+            onChange={handleImageChange}
+            className="hidden"
+            accept="image/*"
           />
         </div>
+        {/* Error message */}
         {error && (
-          <p id="form-error" className="text-red-500 mb-3">
-            {error}
-          </p>
+          <p id="form-error" className="text-red-500 mb-3">{error}</p>
         )}
+        {/* Action buttons */}
         <div className="flex justify-end gap-3">
-          <Link 
-            to="/" 
-            className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
-          >
-            Cancel
-          </Link>
-          <button 
-            type="submit" 
-            className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-          >
-            Save Client
-          </button>
+          <Link to="/" className="btn btn-gray">Cancel</Link>
+          <button type="submit" className="btn btn-green">Save Client</button>
         </div>
       </form>
     </div>

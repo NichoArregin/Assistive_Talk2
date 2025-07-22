@@ -1,46 +1,85 @@
 import React from 'react';
-import Icon from '../components/Icon';
+import Icon from './Icon';
+import "../styles/MoodTracker.css";
 
 const MoodTracker = ({ moodHistory, onAddMood }) => {
-  // Helper to capitalize mood strings (e.g. "happy" -> "Happy")
-  const capMood = mood => mood.charAt(0).toUpperCase() + mood.slice(1);
-
-  // All possible mood options to select
   const moodOptions = ['happy', 'content', 'sad', 'upset'];
 
+  // Helper to format relative time (e.g., "5m ago", "just now", or date if older)
+  const formatRelativeTime = (timestamp) => {
+    const now = new Date();
+    const then = new Date(timestamp);
+    const diffSec = Math.floor((now - then) / 1000);
+    if (diffSec < 60) return 'just now';
+    if (diffSec < 3600) return `${Math.floor(diffSec/60)}m ago`;
+    if (diffSec < 86400) return `${Math.floor(diffSec/3600)}h ago`;
+    return then.toLocaleDateString();
+  };
+
+  const latestMood = moodHistory.length > 0 ? moodHistory[0] : null;
+  const olderMoods = moodHistory.slice(1);
+
   return (
-    <div className="mood-tracker">
-      <h3 className="text-lg font-semibold text-gray-100 mb-2">Mood Tracker</h3>
-
-      {/* Display recent mood history (last few entries) */}
-      {moodHistory.length > 0 ? (
-        <div className="flex items-center gap-2 mb-3">
-          {moodHistory.map(entry => (
-            <Icon 
-              key={entry.id} 
-              name={`mood${capMood(entry.mood)}`} 
-              className="w-6 h-6 text-gray-200" 
-              title={`${entry.mood} – ${new Date(entry.timestamp).toLocaleString()}`} 
-            />
-          ))}
+    <div className="mood-tracker card-section">
+      <h3>How are you feeling?</h3>
+      <div className="mood-tracker-grid">
+        {/* Mood input (emoji buttons) */}
+        <div className="mood-input">
+          <p>Log a new mood:</p>
+          <div className="mood-options">
+            {moodOptions.map(mood => (
+              <button 
+                key={mood}
+                onClick={() => onAddMood(mood)}
+                className="mood-btn"
+                aria-label={mood.charAt(0).toUpperCase() + mood.slice(1)}
+              >
+                <Icon name={`mood${mood.charAt(0).toUpperCase() + mood.slice(1)}`} className="mood-icon" />
+                <span className="mood-label">{mood.charAt(0).toUpperCase() + mood.slice(1)}</span>
+              </button>
+            ))}
+          </div>
         </div>
-      ) : (
-        <p className="text-gray-400 mb-3">No mood entries yet.</p>
-      )}
-
-      {/* Mood selection buttons */}
-      <div className="flex items-center gap-4">
-        <span className="text-gray-300">How are you feeling?</span>
-        {moodOptions.map(mood => (
-          <button 
-            key={mood} 
-            onClick={() => onAddMood(mood)} 
-            className="p-2 bg-slate-700 rounded-full hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500" 
-            aria-label={`Select mood ${mood}`}
-          >
-            <Icon name={`mood${capMood(mood)}`} className="w-8 h-8" />
-          </button>
-        ))}
+        {/* Mood history display */}
+        <div className="mood-history">
+          <h4>Recent moods</h4>
+          {latestMood ? (
+            <div>
+              {/* Latest mood highlighted card */}
+              <div className="latest-mood">
+                <Icon 
+                  name={`mood${latestMood.mood.charAt(0).toUpperCase() + latestMood.mood.slice(1)}`} 
+                  className="latest-mood-icon" 
+                />
+                <div>
+                  <p className="latest-mood-label">
+                    {latestMood.mood.charAt(0).toUpperCase() + latestMood.mood.slice(1)}
+                  </p>
+                  <p className="latest-mood-time">
+                    Latest mood, logged {formatRelativeTime(latestMood.timestamp)}
+                  </p>
+                </div>
+              </div>
+              {/* Older mood entries list */}
+              <ul className="mood-list">
+                {olderMoods.map(entry => (
+                  <li key={entry.id} className="past-mood">
+                    <Icon 
+                      name={`mood${entry.mood.charAt(0).toUpperCase() + entry.mood.slice(1)}`} 
+                      className="past-mood-icon" 
+                    />
+                    <span className="past-mood-label">
+                      {entry.mood.charAt(0).toUpperCase() + entry.mood.slice(1)}
+                    </span>
+                    <span className="past-mood-time">{formatRelativeTime(entry.timestamp)}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ) : (
+            <p className="no-moods">No moods logged yet.</p>
+          )}
+        </div>
       </div>
     </div>
   );
