@@ -1,28 +1,18 @@
 // src/pages/HomePage.jsx
-import React, { useState } from "react";
+import React from "react";
 import ClientCard from "../components/ClientCard";
-import TodayAlerts from "../components/TodayAlerts";
+import { Link } from "react-router-dom";
+import "../styles/HomePage.css";
 
 function HomePage({ clients }) {
-  const [search, setSearch] = useState("");
-
-  const filtered = clients.filter((client) =>
-    client.name.toLowerCase().includes(search.toLowerCase())
-  );
-
   return (
-    <div className="homepage">
-      <input
-        type="text"
-        placeholder="Search clients..."
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-      />
-
-      <TodayAlerts clients={clients} />
-
+    <div className="homepage-container">
+      <div className="header-row">
+        <h1>Assistive Talk</h1>
+        <Link to="/add" className="add-btn">+ Add Client</Link>
+      </div>
       <div className="client-grid">
-        {filtered.map((client) => (
+        {clients.map((client) => (
           <ClientCard key={client.id} client={client} />
         ))}
       </div>
