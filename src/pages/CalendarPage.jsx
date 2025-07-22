@@ -1,21 +1,34 @@
-import React from "react";
+import React, { useState } from "react";
 import { useParams } from "react-router-dom";
-import ClientCalendar from "../components/Calendar";
+import CustomCalendar from "../components/Calendar";
 
-function CalendarPage({ clients }) {
+const CalendarPage = ({ clients }) => {
   const { id } = useParams();
+  const [date, setDate] = useState(new Date());
+
   const client = clients.find((c) => c.id === id);
+  if (!client) return <p>Client not found.</p>;
 
-  if (!client) return <p>Client not found</p>;
-
-  const scheduledOptions = [...client.activities, ...client.meals];
+  const combinedEvents = [
+    ...(client.activities || []).map((a) => ({
+      ...a,
+      type: "Activity",
+    })),
+    ...(client.meals || []).map((m) => ({
+      ...m,
+      type: "Meal",
+    })),
+  ].map((event) => ({
+    date: event.date,
+    label: `${event.type}: ${event.label}`,
+  }));
 
   return (
-    <div className="container">
+    <div className="calendar-page">
       <h2>{client.name}'s Calendar</h2>
-      <ClientCalendar scheduledOptions={scheduledOptions} />
+      <CustomCalendar value={date} onChange={setDate} events={combinedEvents} />
     </div>
   );
-}
+};
 
 export default CalendarPage;

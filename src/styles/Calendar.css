@@ -1,15 +1,19 @@
-.react-calendar {
-  width: 100%;
-  background-color: white;
-  border-radius: 10px;
-  padding: 1rem;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+.calendar-wrapper {
+  margin: 20px auto;
+  max-width: 90%;
 }
 
-.calendar-dot {
-  margin-top: 0.5rem;
+.calendar-event-list {
   padding: 0;
+  margin: 0;
   list-style: none;
-  font-size: 1.2rem;
-  text-align: center;
+  font-size: 10px;
+  color: #222;
+}
+
+.calendar-event {
+  background-color: #fceabb;
+  margin-top: 2px;
+  padding: 2px 4px;
+  border-radius: 4px;
 }

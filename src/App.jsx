@@ -89,6 +89,7 @@ function App() {
     <Router>
       <Header />
       <Routes>
+        <Route path="/calendar/:id" element={<CalendarPage clients={clients} />} />
         <Route path="/" element={<HomePage clients={clients} reminders={todaysReminders} />} />
         <Route path="/add" element={<AddClientPage onAddClient={handleAddClient} />} />
         <Route

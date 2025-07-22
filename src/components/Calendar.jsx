@@ -3,28 +3,29 @@ import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import "../styles/Calendar.css";
 
-function ClientCalendar({ scheduledOptions }) {
-  const tileContent = ({ date }) => {
-    const optionsForDate = scheduledOptions.filter(
-      (opt) => new Date(opt.date).toDateString() === date.toDateString()
-    );
-
-    return optionsForDate.length > 0 ? (
-      <ul className="calendar-dot">
-        {optionsForDate.map((opt, idx) => (
-          <li key={idx} title={`${opt.label} at ${opt.time}`}>
-            {opt.icon}
-          </li>
-        ))}
-      </ul>
-    ) : null;
+const CustomCalendar = ({ value, onChange, events = [] }) => {
+  const tileContent = ({ date, view }) => {
+    if (view === "month") {
+      const dayEvents = events.filter(
+        (event) => event.date.split("T")[0] === date.toISOString().split("T")[0]
+      );
+      return (
+        <ul className="calendar-event-list">
+          {dayEvents.map((event, idx) => (
+            <li key={idx} className="calendar-event">
+              {event.label}
+            </li>
+          ))}
+        </ul>
+      );
+    }
   };
 
   return (
-    <div>
-      <Calendar tileContent={tileContent} />
+    <div className="calendar-wrapper">
+      <Calendar value={value} onChange={onChange} tileContent={tileContent} />
     </div>
   );
-}
+};
 
-export default ClientCalendar;
+export default CustomCalendar;
